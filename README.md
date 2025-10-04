@@ -3,7 +3,7 @@
 A deep learning-based object detection system for identifying pens and pencils in images and videos.
 
 
-![Demo](https://github.com/CTNone/detect_pen_pencil/blob/main/TEST/result_video.mp4)
+![Demo](val_batch2_pred.jpg)
 *Thay thế bằng ảnh demo của bạn*
 ## 📋 Project Overview
 
