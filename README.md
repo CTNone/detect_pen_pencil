@@ -20,8 +20,10 @@ This project implements an object detection model to recognize and locate pens a
 [https://github.com/CTNone/detect_pen_pencil/raw/main/TEST/result_video.mp4](https://drive.google.com/file/d/1ll1VXfucf3t22wyfRQPuBoRju7RmdgDJ/view?usp=drive_link)
 
 ### Performance Metrics
-weights/results.png
-weights/confusion_matrix_normalized.png
+![Demo](weights/results.png)
+
+![Demo](weights/confusion_matrix_normalized.png)
+
 
 
 👥 Authors
