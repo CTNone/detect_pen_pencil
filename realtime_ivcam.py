@@ -62,8 +62,61 @@ def main():
             t0 = time.time()
             # Run inference (returns a Results object)
             results = model(frame, imgsz=args.imgsz, conf=args.conf)
-            # Draw predictions onto image
-            vis = results[0].plot()  # returns BGR numpy array
+            r = results[0]
+
+            # Prepare visualization image (copy original frame)
+            vis = frame.copy()
+
+            # Get class names
+            names = None
+            if hasattr(model, 'names') and model.names is not None:
+                names = model.names
+            elif hasattr(r, 'names') and r.names is not None:
+                names = r.names
+
+            # Draw boxes and labels (class + confidence)
+            try:
+                boxes = r.boxes.xyxy
+                confs = r.boxes.conf
+                clss = r.boxes.cls
+            except Exception:
+                boxes = None
+
+            if boxes is not None:
+                # Convert to numpy if tensors
+                try:
+                    xy = boxes.cpu().numpy()
+                    confs_np = confs.cpu().numpy()
+                    clss_np = clss.cpu().numpy()
+                except Exception:
+                    xy = boxes
+                    confs_np = confs
+                    clss_np = clss
+
+                for (x1, y1, x2, y2), conf, cls in zip(xy, confs_np, clss_np):
+                    x1, y1, x2, y2 = int(x1), int(y1), int(x2), int(y2)
+                    # bbox
+                    cv2.rectangle(vis, (x1, y1), (x2, y2), (0, 255, 0), 2)
+
+                    # label text
+                    cls_name = str(int(cls))
+                    if names is not None:
+                        try:
+                            cls_name = names[int(cls)]
+                        except Exception:
+                            cls_name = str(int(cls))
+
+                    label = f"{cls_name} {float(conf):.2f}"
+
+                    # text size and background
+                    font = cv2.FONT_HERSHEY_SIMPLEX
+                    font_scale = 0.6
+                    thickness = 2
+                    (tw, th), baseline = cv2.getTextSize(label, font, font_scale, thickness)
+                    # make background rectangle
+                    cv2.rectangle(vis, (x1, y1 - th - baseline - 6), (x1 + tw + 6, y1), (0, 255, 0), -1)
+                    # put text (black on green background)
+                    cv2.putText(vis, label, (x1 + 3, y1 - 4), font, font_scale, (0, 0, 0), thickness)
 
             fps = 1.0 / max(1e-6, (time.time() - t0))
             cv2.putText(vis, f'FPS: {fps:.1f}', (10, 30), cv2.FONT_HERSHEY_SIMPLEX, 1.0, (0, 255, 0), 2)
