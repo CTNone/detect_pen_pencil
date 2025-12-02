@@ -1,9 +1,9 @@
 # Nhận diện Bút chì và Bút bi (Pen & Pencil Detection)
 
-README này mô tả ngắn gọn nội dung và cách sử dụng code/data trong thư mục `detect_pen_pencil`.
+README này mô tả ngắn gọn nội dung và cách sử dụng code/data trong bài toán của tôi.
 
 **Mục tiêu**
-- Xây dựng mô hình phát hiện đối tượng (YOLOv8) để nhận diện `eraser`, `pen`, `pencil`.
+- Xây dựng mô hình phát hiện đối tượng (YOLOv8) để nhận diện `pen`, `pencil`.
 - Hợp nhất dataset từ Roboflow, huấn luyện, đánh giá và chạy inference realtime (dùng điện thoại làm webcam qua iVCam).
 
 **Yêu cầu**
@@ -29,7 +29,6 @@ pip install roboflow pyyaml tqdm
 - `weights/best.pt` — file model đã train (đường dẫn mẫu trên máy bạn):
   `C:\HỌC TRÊN TRƯỜNG\NĂM 4\kỳ 1\MyProject\ObjDetection\detect_pen_pencil\weights\best.pt`
 - `realtime_ivcam.py` — script Python để infer realtime từ webcam do iVCam (phone) cung cấp.
-- `README_realtime_ivcam.md` — hướng dẫn nhanh cho script realtime.
 
 **Cấu trúc thư mục (mô tả ngắn)**
 - `weights/` — chứa `best.pt`, `last.pt` nếu có.
@@ -84,42 +83,3 @@ Tối ưu & Troubleshooting
 - Nếu webcam không mở: kiểm tra iVCam đang chạy, thử device index khác, hoặc mở Device Manager/Camera để xem tên thiết bị.
 - Để xem log/training outputs: mở thư mục `runs/detect/<run_name>` sau khi train.
 
-Gợi ý bước tiếp theo
-- Nếu muốn: tôi có thể thêm script nhỏ để vẽ label + confidence rõ ràng hơn trong `realtime_ivcam.py`, hoặc làm 1 notebook `eval_and_plots.ipynb` tóm tắt kết quả training.
-
----
-Nếu bạn muốn tôi cập nhật README này (thêm hình ảnh mẫu, ví dụ lệnh chính xác cho GPU, hoặc chuyển toàn bộ notebook sang chạy trên Windows), cho tôi biết phần cụ thể cần bổ sung.
-**Realtime detection with iVCam (phone as webcam)**
-
-- **File**: `realtime_ivcam.py`
-- **Model**: default path set to `C:\HỌC TRÊN TRƯỜNG\NĂM 4\kỳ 1\MyProject\ObjDetection\detect_pen_pencil\weights\best.pt`
-
-Quick steps:
-
-1. Install dependencies (PowerShell):
-
-```powershell
-python -m pip install --upgrade pip
-pip install ultralytics opencv-python
-# If you have a GPU, install a matching torch build first (see https://pytorch.org)
-```
-
-2. Run iVCam on your phone and connect to the PC. iVCam exposes a webcam device (try device index 0,1,...).
-
-3. Run the realtime script (try device index 0):
-
-```powershell
-cd "c:\HỌC TRÊN TRƯỜNG\NĂM 4\kỳ 1\MyProject\ObjDetection\detect_pen_pencil"
-python realtime_ivcam.py --device 0
-```
-
-Optional: save output video and adjust confidence:
-
-```powershell
-python realtime_ivcam.py --device 0 --save --output result.mp4 --conf 0.3
-```
-
-Troubleshooting:
-- If the camera doesn't open, try different device indexes (0,1,2...).
-- If `ultralytics` requires `torch` not installed automatically, install it with the appropriate CUDA/CPU wheel from https://pytorch.org.
-- For lower latency, reduce `--imgsz` to 320 or lower.
